@@ -19,6 +19,9 @@ const chatSlice = createSlice({
 		},
 		updateImage(state, action) {
 			state.chat.image = action.payload
+		},
+		updateMessages(state, action) {
+			state.chat.messages = action.payload
 		}
 	}
 })
@@ -27,7 +30,8 @@ export const {
 	updateChat,
 	updateName,
 	updateUsersCount,
-	updateImage
+	updateImage,
+	updateMessages
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

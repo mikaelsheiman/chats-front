@@ -111,7 +111,7 @@ const ChatEditPage = () => {
 
                     <CustomInput placeholder="Название" value={chat.name} setValue={setName} />
 
-                    <CustomTextarea placeholder="Адрес" value={chat.users_count} setValue={setUsersCount} />
+                    {/* <CustomTextarea placeholder="Адрес" value={chat.users_count} setValue={setUsersCount} /> */}
 
                     <div className="buttons-container">
 

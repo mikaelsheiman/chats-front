@@ -3,7 +3,8 @@ import {
 	updateChat,
 	updateName,
 	updateUsersCount,
-	updateImage
+	updateImage,
+	updateMessages
 } from "../../store/chats/chatSlice";
 import {api} from "../../utils/api";
 
@@ -28,6 +29,10 @@ export function useChat() {
 		dispatch(updateImage(value))
 	}
 
+	const setMessages = (value) => {
+		dispatch(updateMessages(value))
+	}
+
 	const fetchChat = async (id) => {
 
 		const {data} = await api.get(`chats/${id}`);
@@ -42,6 +47,7 @@ export function useChat() {
 		fetchChat,
 		setName,
 		setUsersCount,
-		setImage
+		setImage,
+		setMessages
 	};
 }
