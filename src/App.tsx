@@ -1,91 +1,65 @@
-import "./styles/Main.sass"
-import "./styles/Reset.sass"
-import Header from "./components/Header/Header";
-import Breadcrumbs from "./components/Breadcrumbs/Breadcrumbs";
-import {BrowserRouter, Route, Routes, Navigate, useLocation} from 'react-router-dom';
-import ChatPage from "./pages/ChatPage/ChatPage";
-import ProfilePage from "./pages/ProfilePage/ProfilePage";
-import {QueryClient, QueryClientProvider } from "react-query";
-import {Provider} from "react-redux"
-import store from "./store/store"
-import LoginPage from "./pages/LoginPage/LoginPage";
-import RegisterPage from "./pages/RegisterPage/RegisterPage";
-import {useAuth} from "./hooks/users/useAuth";
-import MessageConstructor from "./components/MessageConstructor/MessageConstructor";
-import MessagePage from "./pages/MessagePage/MessagePage";
-import MessagesPage from "./pages/MessagesPage/MessagesPage";
-import ChatsList from "./pages/ChatsPage/ChatsList/ChatsList";
-
-
-const TopPanelWrapper = () => {
-
-    const {is_authenticated} = useAuth()
-
-    const location = useLocation()
-
-    return (
-        <div className="top-panel-wrapper">
-            <Breadcrumbs />
-            {is_authenticated && location.pathname.endsWith("chats") && <MessageConstructor /> }
-        </div>
-    )
-}
-
+import "./Styles/Main.sass"
+import "./Styles/Reset.sass"
+import {Fragment, useState} from "react";
+import Header from "./Components/Header/Header";
+import Breadcrumbs from "./Components/Breadcrumbs/Breadcrumbs";
+import {BrowserRouter, Route, Routes,} from 'react-router-dom';
+import ChatList from "./Components/ChatList/ChatList";
+import ChatPage from "./Components/ChatPage/ChatPage";
+import {Chat} from "./Types";
+import DemoPage from "./Components/DemoPage/DemoPage";
 
 function App() {
 
-    const queryClient = new QueryClient()
+    const [selectedChat, setSelectedChat] = useState<Chat | undefined>(undefined)
 
     return (
-        <QueryClientProvider client={queryClient}>
+        <div className="App">
 
-            <Provider store={store}>
+            <div className="wrapper">
 
-                <BrowserRouter basename="/messager">
+                <Header />
 
-                    <div className="App">
+                <div className={"content-wrapper"}>
 
-                        <div className="wrapper">
+                    <BrowserRouter basename="/chats-front">
 
-                            <Header />
+                        <Routes>
+                            
+                            <Route path="/" element={<DemoPage></DemoPage>} />
 
-                            <div className={"content-wrapper"}>
+                            <Route path="/chats/*" element={
+                                <Fragment>
+                                    <Breadcrumbs selectedChat={selectedChat} setSelectedChat={setSelectedChat}/>
+                                    <Routes>
+                                        <Route path="/" element={<ChatList />} />
+    
+                                        <Route path="/:id" element={<ChatPage selectedChat={selectedChat} setSelectedChat={setSelectedChat} />} />
+                                    </Routes>
+                                </Fragment>
+                            } />
+                               
+                        </Routes>
 
-                                <TopPanelWrapper />
+                        {/* <Breadcrumbs selectedChat={selectedChat} setSelectedChat={setSelectedChat}/>
 
-                                <Routes>
+                        <Routes>
 
-                                    <Route path="/" element={<Navigate to="/chats" replace />} />
+                            <Route path="/" element={<<Navigate to="/chats" replace />>} />
 
-                                    <Route path="/profile" element={<ProfilePage />} />
+                            <Route path="/chats" element={<ChatList />} />
 
-                                    <Route path="/chats" element={<ChatsList />} />
+                            <Route path="/chats/:id" element={<ChatPage selectedChat={selectedChat} setSelectedChat={setSelectedChat} />} />
 
-                                    <Route path="/chats/:id" element={<ChatPage />} />
+                        </Routes> */}
 
-                                    <Route path="/profile" element={<ProfilePage />} />
+                    </BrowserRouter>
 
-                                    <Route path="/messages/:id" element={<MessagePage />} />
+                </div>
 
-                                    <Route path="/messages" element={<MessagesPage />} />
+            </div>
 
-                                    <Route path="/login" element={<LoginPage />} />
-
-                                    <Route path="/register" element={<RegisterPage />} />
-
-                                </Routes>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </BrowserRouter>
-
-            </Provider>
-
-        </QueryClientProvider>
+        </div>
     )
 }
 
